@@ -1,0 +1,11 @@
+One of the first things that is see is a history log of all the past commits that have been made. It shows layout of the repository and the branches that it has.
+
+I also see a list of all people who has committed in the past, with their commits and emails listed. 
+
+We also notices all the dates for the commits listed to the right of the window mentioned above.
+
+One the left at the very bottom there is a window showing the file changes as if it were a diff file. 
+
+Above that we have more information from the change long and information about the author.
+
+Finally above that we have even more information with information about the Commit id number and some relevant info to that commit, its parent, child, branches, master and committer. 

@@ -1,0 +1,77 @@
+dir=$1  # Get the directory that you’ll deal with
+RESULT=`ls -a $dir | sort`  # Sort the directory files
+IFS=$'\n'  # Deal with files that contain ‘.’
+
+declare -a DOTARRAY  # The array to hold the files with ‘.’
+declare -a FILEARRAY  # Array for remaining files
+
+
+let dotCount=0  # Count the for the DOTARRAY
+let fileCount=0  # Count for the FILEARRAY
+
+for FILE in $RESULT  # Go through the directory and access the files
+
+do
+	# No read permissions
+	if [ ! -r "$dir/$FILE" ] 
+	then
+		echo "$dir/$FILE is read only"  # Display read error
+	fi
+
+	# File is readable and valid
+	if [[ ! -L "$dir/$FILE" && -r "$dir/$FILE" ]]
+	then
+		# If regular file
+		if [ -f "$dir/$FILE" ]
+	  	then
+
+			# If file starts with ‘.’
+			if [ "${FILE:0:1}" == "." ]
+			then
+				# Store in the dot array 
+				DOTARRAY[$dotCount]="$dir/$FILE"
+		  		let dotCount=dotCount+1 # Inc. number of files
+			else
+				# Store in the regular file array
+		  		FILEARRAY[$fileCount]="$dir/$FILE"
+		  		let fileCount=fileCount+1
+			fi
+		fi
+	fi
+done
+
+# Combine the two finals arrays with the dots on top for priority
+FINALARRAY=("${DOTARRAY[@]}" "${FILEARRAY[@]}")
+
+# The total count for the size of the final array
+let totalCount=(fileCount + dotCount)
+
+exec 2>/dev/null
+
+# Go for each element
+for (( i=0; i<$totalCount; i++ ))
+do
+	# Go through the array
+    for (( j=$i+1; j<$count; j++ ))
+    do
+		# Compare the files at a specific location in the array
+		cmp -s "${DOTARRAY[$i]}" "${DOTARRAY[$j]}"
+		
+		# If there was a duplicate (names were the same) 
+		if [ $? -eq 0 
+		then
+			# Delete the duplicate file and make the hardlink
+			ln -fP "${DOTARRAY[$i]}" "${DOTARRAY[$j]}"
+			DOTARRY[$j]=DOTARRAY[$i]
+		fi
+
+	done
+
+done
+
+
+
+
+
+
+

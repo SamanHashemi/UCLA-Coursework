@@ -1,0 +1,94 @@
+First I get the corutils by doing the command:
+wget https://web.cs.ucla.edu/classes/spring18/cs35L/assign/coreutils-with-bug.tar.gz
+
+This file was moved using a series of mv commands to the directory 35L/lab4
+
+I then unzipped the file using the tar command:
+tar -zxvf coreutils-with-bug-tar.gz
+
+Which was followed by a cd into the folder that was created called: "coreutils-with-bug" 
+
+In this folder I used the command ./configure to configure the file before tying to compile it.
+
+This was promptly followed by the command "make". However, the "make" command created an error which looked like the following;
+ int futimens (int, char const *, struct timespec const [2]);
+     ^
+In file included from utimecmp.h:25:0,
+                 from utimecmp.c:25:
+/usr/include/sys/stat.h:373:12: note: previous declaration of 'futimens' was here
+ extern int futimens (int __fd, const struct timespec __times[2]) __THROW;
+            ^
+make[3]: *** [utimecmp.o] Error 1
+make[3]: Leaving directory `/w/home.20/cs/ugrad/saman/35L/lab4/coreutils-with-bug/lib'
+make[2]: *** [all] Error 2
+make[2]: Leaving directory `/w/home.20/cs/ugrad/saman/35L/lab4/coreutils-with-bug/lib'
+make[1]: *** [all-recursive] Error 1
+make[1]: Leaving directory `/w/home.20/cs/ugrad/saman/35L/lab4/coreutils-with-bug'
+make: *** [all] Error 2
+
+
+In order to resolve the error we needed to create the patch which was simply done by using the command: wget https://web.cs.ucla.edu/classes/spring18/cs35L/assign/coreutils.diff.
+
+This was saved in the coreutils-with-bug directory (because that is the directory that I downloaded it in).
+
+This was followed by the command to patch:
+patch -p0 < coreutils.diff
+
+The output from the patch was the following (for reference):
+patching file lib/utimens.c
+patching file lib/utimens.h
+patching file src/copy.c
+patching file src/tee.c
+patching file src/touch.c
+
+
+I now had to remake the file with another "make" command which resulted in no errors.
+
+
+Continuing with the lab we see that we need to make three files and see if it is working properly. (To do this we simply use the example provided)
+
+tmp=$(mktemp -d)
+cd $tmp
+touch -d '1918-11-11 11:00 GMT' wwi-armistice
+touch now
+sleep 1
+touch now1
+~/35L/lab4/coreutils-with-bug/src/ls -lt --full-time wwi-armistice now now1
+
+where the output is:
+
+-rw-r--r-- 1 saman csugrad 0 1918-11-11 03:00:00.000000000 -0800 wwi-armistice
+-rw-r--r-- 1 saman csugrad 0 2018-05-06 20:50:40.434616293 -0700 now
+-rw-r--r-- 1 saman csugrad 0 2018-05-06 20:50:40.434616293 -0700 now1
+
+
+We know this is incorrect because we need to have this in reverse order with www-armistice at the end
+
+To trace the code we need to use our 33 skills
+
+This is done by the following:
+gdb ~/35L/lab4/coreutils-with-bugs/src/ls
+
+Where we using the following commands in the gdb:
+
+(gdb) info functions
+
+We use the "info functions to get the list of all the functions that we would need to take a look at. We see the function called "compare_mtime" and "comparestr_mtime". Both look relevant but for now lets just put a break point at the comapre_mtime.
+
+(gdb) break compare_mtime
+(gdb) list
+(gdb) si
+
+Following the code we see the that our problem arises in the timespec.h where the function:
+
+timepspec_cmp contains a comparison that results in the numbers being compared in a way that fails to account for overflow. To fix this we simply create a diff of the timespec.h file that contains the error. This is done by first creating a new directory using cp -R to copy the directory to a new directory called coreutils-with-bugs-new and this contained all the same file where I went and changed the lines that I needed to be different. This was followed by the following command which created the diff file:
+
+diff -u coreutils-with-bug/lib/timespec.h coreutils-with-bug-new/lib/timespec.h > lab4.diff
+
+This created the correct diff file that allowed me to complete the lab.
+
+
+
+
+
+ 

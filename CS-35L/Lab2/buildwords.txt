@@ -1,0 +1,24 @@
+grep '<td>.\{1,\}<\/td>' | \
+
+sed -n '1~2!p' | \
+
+# Remove tags
+sed 's/<td>//g' | \
+sed 's/<\/td>//g' | \
+sed 's/<u>//g; s/<\/u>//g' | \
+
+# Lowercase stuff
+sed -e 's/\(.*\)/\L\1/' | \
+
+# Delete leading spaces
+sed "s/^\s*//g" | \
+
+# Remove commas and spaces
+sed -E "s/,\s|\s/\n/g" | \
+
+# Remove all non-Hawaiian chars
+sed '/b\|c\|d\|f\|g\|j\|q\|r\|s\|t\|v\|x\|y\|z/d' | \
+
+# Sort it all
+sort -u
+

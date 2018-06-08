@@ -1,0 +1,70 @@
+- Logged on to the server lnxsvr06
+
+- The command locale returned everything with the value ‘en-US’ so I ran the export LC_ALL=‘C’ command and re-ran locale and was returned everything with the value of ‘C’ except for the first value which should still be ‘en-US’
+
+- Looking at the /usr/share/dict/words I noticed that the words are seemingly in order, but for good measure I ran the command sort /usr/share/dict/words > words to sort the words
+
+- Used wget to get the webpage. By copy and pasting the webpage and using the wget command in front of it
+
+- i then used the cp assign2.html assign2.txt to create a copy of the html file and turn it into a txt file.
+
+- I then ran the series of commands that were specified by the specification document they were the following:
+
+	- tr -c 'A-Za-z' '[\n*]' < assign2.txt which outputted all the words in the assign2.txt file with a bunch of newlines between most of the words. After some looking around for why these newlines were being printed I noticed that the reason for all the newlines is because the -c command will print a newline for ever non-letter char and it is replaced with a newline. 
+
+	- tr -cs 'A-Za-z' '[\n*]' < assign2.txt this is almost the same as the last command that was executed (check above for more details) but the -cs command removes all the unnecessary clutter which makes it easier to read and removes the new lines essentially.
+
+	- tr -cs 'A-Za-z' '[\n*]' < assign2.txt | sort is the next command that I used. Put the "< assign2.txt" before the "| sort" because we want it to sort after it gets all the words. I tried it the other way to start and all I got were the lines sorted in order and not the words themselves. This is different from the last command because it actually sorts the values instead of just outputting them. 
+
+	- tr -cs 'A-Za-z' '[\n*]' < assign2.txt | sort -u command is the same as the previous command but this one deletes all the repeated words so all the values are unique.
+
+	- tr -cs 'A-Za-z' '[\n*]' < assign2.txt | sort | comm - words this command splits up the words into three sections. On the right section we have all the words that are unique to only the webpage (assign2.txt) and in the middle section we have the words that are only unique to the word document. Finally, the right section has all the words that exist in both documents. This is different from the previous one because it is literally comparing two files as opposed to just sorting one of them.
+
+	- tr -cs 'A-Za-z' '[\n*]' < assign2.txt | sort -u | comm -23 - words this is the same as the previous examples, but for this one the only difference is that we see that there is only one column that has the values that are specific to the html doc. The words in here cannot be found in the "words" list. 
+
+
+Continuing with the lab I moved to building the bulidwords file. 
+
+I had to do quite a bit of research to understand the commands that were being used. I had the following:
+
+This line gets everything from the two "td" tags ready for use (essentially):
+grep '<td>.\{1,\}<\/td>' | \
+
+The following line deletes all the non english words:
+sed -n '1~2!p' | \
+
+The following three lines removed all the tags to get the words by themselves:
+sed 's/<td>//g' | \
+sed 's/<\/td>//g' | \
+sed 's/<u>//g; s/<\/u>//g' | \
+
+We then need to lowercase everything, which is done with this line:
+sed -e 's/\(.*\)/\L\1/' | \
+
+The leading spaces also pose the problem that incorrect words will be considered. So they are removed with this line:
+sed "s/^\s*//g" | \
+
+This line removes all irrelevant commas and spaces:
+sed -E "s/,\s|\s/\n/g" | \
+
+We then have to make sure that only Hawaiian words (letters) exists so we have to remove all the non hawaiian words with this:
+sed '/b\|c\|d\|f\|g\|j\|q\|r\|s\|t\|v\|x\|y\|z/d' | \
+
+Only to end up sorting it with:
+sort -u
+
+
+I then used chmod u+x buildwords to add executable ability to my user. and then ran a simple ./buildwords < hwnwdseng.htm > hwords and using a simple emacs hwords I saw that the words were properly listed and easy to use.
+
+
+I used the following to get the number of Hawaiian words misspelled words on the webpage: 
+tr 'PKMNWLHAEIOU' 'pkmnwlhaeiou' < assign2.html | tr -cs "pk\'mnwlhaeiou" '[\n*]' | sort -u | comm -23 - hwords | wc -l
+which gave the value 197
+
+
+The following command was used to get the number of english misspelled words in the file:
+tr -cs 'A-Za-z' '[\n*]' < assign2.html | sort -u | comm -23 - words | wc -l
+which gave the value 81
+
+
+
