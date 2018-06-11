@@ -1,0 +1,6 @@
+I am the mayor. I can do anything I want.
+3 6 12 24 48 96
+5 l 287
+24 2
+ncrmiy
+4 6 2 3 1 5

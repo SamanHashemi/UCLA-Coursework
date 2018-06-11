@@ -1,0 +1,2 @@
+movq $0x556468D6, %rdi
+retq
