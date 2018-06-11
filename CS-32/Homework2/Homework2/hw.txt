@@ -1,0 +1,32 @@
+2. Stack first 12 locations
+
+1. 4,3
+2. 3,3
+3. 5,3
+4. 5,2
+5. 5,1
+6. 6,1
+7. 7,1
+8. 8,1
+9. 8,2
+10. 6,3
+11. 4,4
+12. 4,5
+
+
+4. Queue First 12 locations
+
+1. 4,3
+2. 4,4
+3. 5,3
+4. 3,3
+5. 4,5
+6. 6,3
+7. 5,2
+8. 4,6
+9. 5,5
+10. 5,1
+11. 4,7
+12. 6,5
+
+The queue was different because unlike the stack it would access the first location added to the queue, while the stack would access the most recent location added. This makes the queue access the locations around it first while the stack follows a path and goes back, the queue would follow a path and if it failed it would try the next location that was added. 
