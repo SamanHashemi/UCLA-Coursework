@@ -1,0 +1,65 @@
+Lab 9 HW
+
+2) I moved into the diffutils directory and I used the git checkout to create a branch called quote with the following command:
+
+git checkout v3.0 -b quote
+
+3) I moved the file quote-3.0-patch.txt
+
+patch -p1 < quote-3.0-patch.txt
+
+Which outputs:
+patching file src/cmp.c
+patching file src/diff.c
+patching file src/diff3.c
+patching file src/dir.c
+patching file src/sdiff.c
+patching file src/util.c
+
+
+5) For each file above I ran C-x 4 a in emacs and exited with saving.
+
+6) I now have a changelog folder that I can commit and print out using these commands:
+
+git add .
+git commit -aF src/ChangeLog
+
+which results in the following:
+
+ Committer: Saman Alex Hashemipour <saman@lnxsrv01.seas.ucla.edu>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+If the identity used for this commit is wrong, you can fix it with:
+
+    git commit --amend --author='Your Name <you@example.com>'
+
+ 12 files changed, 3490 insertions(+), 43 deletions(-)
+ create mode 100644 quote-3.0-patch.txt
+ create mode 100644 src/cmp.c.orig
+ create mode 100644 src/cmp.c.rej
+ create mode 100644 src/diff.c.orig
+ create mode 100644 src/diff.c.rej
+ create mode 100644 src/util.c.orig
+
+7) I ran git format-patch -1 --stdout > formatted-patch.txt 
+
+
+8) I ran "git checkout -b 'partner' 'v3.0'" to create a new branch for my partner and then renamed it to "jane-formatted-patch.txt" then I did "git am jane-formatted-patch.txt" 
+
+9) I did the same commands as in the lab:
+
+./bootstrap
+./configure
+make
+make check
+
+Then I ran "make distdir" went to 
+
+
+10) I go into the eggert dir by "cd ~eggert/src/gnu/emacs" and ran the command "gitk" to find a GUI that popped up which I took a screenshot of on my computer and saved as "gitk-screenshot.png"
+

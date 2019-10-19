@@ -1,0 +1,28 @@
+Name: Saman Hashemipour
+ID: 904903562
+
+For this lab I was asked to create two files that essentially did the same thing using different methods. The two files tr2u and tr2b were the same in dealing with the I/O from 'to' and 'from' but tr2u used read and write and tr2b used the putchar and getchars command that we used in the previous lab. I used the same method of approach for the most part. The beginning parts of the lab were the same when it came to error checking (the lengths, the number of args, etc..) but the second part of each lab was different because we had to take a look at how to deal with each char differently using the putchar vs read and write. For the second part of the lab, which was the bulk of the work, I used either a getchar or the read by going through the entire string and compared them with one another (the to and from) and then we dealt with the corresponding values appropriately.
+
+In order to create a 5mb file (at least) I decided to run the following command to create a file that would allow me to test my file appropriately:
+dd if=/dev/urandom of=atleastfive.txt bs=1M count=5 which created a file of 5mb (5.2 specifically)
+
+I then ran the following commands which resulted in the the number of calls indicated to the right.
+
+strace -c ./tr2b 'a' 'x' < atleastfive.txt > b_out (29)
+strace -c ./tr2u 'a' 'x' < atleastfive.txt > u_out (26)
+strace -c ./tr2b 'a' 'x' < atleastfive.txt (30)
+strace -c ./tr2u 'a' 'x' < atleastfive.txt (23)
+
+
+Finally, the test time was the last requirement for the spec. The rest time for each file was tested using the following commands. The result is posted directly under the commands used.
+
+time ./tr2b 'abc' 'xyz' < atleastfive.txt > b_out
+real	0m0.003s
+user	0m0.001s
+sys	0m0.000s
+
+
+time ./tr2u 'abc' 'xyz' < atleastfive.txt > u_out
+real	0m13.072s
+user	0m1.367s
+sys	0m11.658s

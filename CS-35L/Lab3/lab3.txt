@@ -1,0 +1,50 @@
+Saman Hashemipour
+904 903 562
+CS 35L Rahul
+05-01-18
+
+Lab 3 Log
+
+We have to start the entire project be downloading the tar file. To do this we have to use the wget command:
+	wget ftp://ftp.gnu.org/gnu/coreutils/coreutils-8.29.tar.xz
+
+We next need to verify the signature. We do this by running the command given below:
+	gpg --verify --keyring ./gnu-keyring.gpg coreutils-8.29.tar.xz.sig
+
+This does return an error, but the error is only to explain that the key has not been signed by me. Other than the fact that I have not signed the package myself everything should work fine.
+
+The next command that I use is:
+tar -xJvf coreutils-8.29.tar.xz
+
+This command unzips the file and makes it ready for use.
+
+I next make a directory ~/coreutilsInstalls which is the location where all my coreutils installation will take place.
+
+I next change directories to corutils by doing:
+
+cd coreutls-8.29
+./configure --prefix =/u/ce/ugrad/saman/coreutilsInstall
+
+After this we can compile and install the 8.29 into our install directory that we just made by doing:
+
+make
+make install
+
+We then cd back into the coreutilsInstall/bin where we can then run the command ls -a -A which will allow us to see all the files and we see that the first two files are:
+. 
+.. 
+this indicates that the bug is is still there. So to remove it we want to apply the patch by doing the following:
+
+1. We go back into the coreutils-8.29 directory and emacs patch_file and copy and paste the patch provided. This initially resulted in an indentation issue using emacs so I decided to use nano, which worked fine. 
+
+2. Apply the patch by using the -p1 < patch_file command. The
+	2a. The -p1 command ships the number of backslashes before the file.
+
+To have the changes take place I run "make" again to recompile the file and ensure that it accepted the changes.
+
+We finally see that the file is running properly but outputting more lines that it was previously. This is to be expected and was not alarming.
+
+Finally we use the ls -a -A command the same way that we used it previously to see that the output of the command no longer results in . and .. for the first two outputs.
+
+
+

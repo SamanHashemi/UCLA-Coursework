@@ -1,0 +1,7 @@
+Q1: It does improve the performance of ls because it has less things to print out. Namely, it doesn't have to print out the first two dots
+
+Q2: If it doesn't work with your application and you have issues because of it you need to look out for compatibility issues that may arise so if everything is working then you would need to simply check for any issues that this could cause with the compatibility of your original application.
+
+Q3: It simply outputs nothing because the case to deal with empty files has been taken care of in the python script
+
+Q4: There are some issues because certain functions have not been defined in python3 but are defined in python2. So when running a project on python3 as opposed to python2 you need to make sure that you are checking for compatibility issues between your code and the version of python that you are running.

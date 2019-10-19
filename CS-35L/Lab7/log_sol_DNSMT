@@ -1,0 +1,238 @@
+Joseph Kim
+604 815 454
+CS 35L Litteneker
+5-26-18
+
+
+Assignment 7. SSH setup and use in applications
+Laboratory
+
+
+
+
+
+
+
+
+BeagleBone Setup Instructions
+The board that we will be using for the assignment and that you need to purchase is BeagleBone Green Wireless. The other BeagleBone boards do not have wireless capabilities, which are crucial for the assignment.
+
+ 
+
+1.) Connect your BeagleBone to your computer using the USB cable.
+
+ 
+
+2.) Find BEAGLEBONE as an external storage device and open it.
+
+ 
+
+3.) Double-click on the "START.htm" file. This will open a webpage located on the BeagleBone to show you how to setup your board step-by-step. It will highlight the completed steps as green. You should expect the step "Plug in BeagleBone via USB" already highlighted as green. If the second step is not highlighted as green yet, install the drivers for your operating system. The links to those drivers are located on the page that you are currently on. After installing the drivers, restart your computer. If you did it correctly, the second step on "START.htm" will be highlighted as green.
+
+ 
+
+4.) If you are getting driver installation issues for newer MAC OS X versions and could not turn the second step green, download the driver located on Hspctl ERE. 
+Afterwards, run "sudo rm -rf /System/Library/Extensions/HoRNDIS.kext" and restart your computer.
+
+ 
+
+5.) If you are using Windows, use Putty to SSH into your BeagleBone. e. When it asks for the password, just hit enter since the default password for root is empty for your BeagleBone. If you are using Mac or Linux, just run “sudo ssh root@192.168.7.2” in your terminal. If you want to SSH as a user instead of root for some reason, use the username "debian" and password "temppwd".
+
+ 
+
+6.) After you successfully SSH into your BeagleBone, you should connect it to wifi. The tool we use for wifi connection management is "connmanctl". The steps to connect to wifi:
+
+Start the connmanctl terminal:
+
+sudo connmanctl
+
+Turn on the wifi for your BeagleBone:
+
+connmanctl> enable wifi
+
+Scan all available wifi access points:
+
+connmanctl> scan wifi
+
+List all the discovered access points:
+
+connmanctl> services
+
+The access point you will connect to will look something like this:
+
+CR3760-wifi wifi_506583d4fc5e_544e434150413937414239_managed_psk
+
+Register as the prospective client:
+
+connmanctl> agent on
+
+After you locate the access point you want to connect to, use the string next to the name of the access point as the input to the following command:
+
+connmanctl> connect wifi_506583d4fc5e_544e434150413937414239_managed_psk
+
+If the access point requires a wifi password, enter the password after "Passphrase?":
+
+Passphrase? 3760ClassNet
+
+Now you are connected to the wifi so close the application connmanctl:
+
+connmanctl> quit
+
+ 
+
+7.) You should find the IP address of your BeagleBone by running "ifconfig". It is located under the network interface "wlan0" and labeled as "inet addr". Your teammate will use this IP address to SSH into your BeagleBone from his/her BeagleBone.
+
+ 
+
+8.) After gaining Internet connection, you should first update the database of apt-get:
+
+sudo apt-get update
+
+Install xauth and xvfb for X11 forwarding support for future SSH connections to your BeagleBone:
+
+sudo apt-get install xauth
+sudo apt-get install xvfb
+
+ 
+
+9.) Some BeagleBones come with X11 disabled as a factory setting. Therefore, make sure that it is enabled before attempting the X11 forwarding part of the assignment. On both the server and client, check /etc/ssh/ssh_config and /etc/ssh/sshd_config files. Both can possibly disable X11 forwarding. Check for the line 'X11Forwarding no' and change it to 'X11Forwarding yes’. Additionally, make sure that ~/.ssh/config contains 'ForwardAgent yes' and 'ForwardX11 yes' for the relevant hosts.
+
+Also, you need to install an X11 client in your computer: XMing for Windows, XQuartz for Mac. Without these clients, you would not be able to see the X windows on your machine.
+
+ 
+
+10.) Install Firefox, which is a web browser with GUI support, in order to do the X11 forwarding part of the assignment. Having Firefox will also make it possible to connect to access points like UCLA_WIFI, which require you to sign in with your credentials to gain Internet access. Run the following to install Firefox on your BeagleBone:
+
+sudo apt-get install firefox-esr-l10n-en-gb
+
+#pin
+
+
+
+
+
+
+
+
+
+
+To begin the lab, we must set up our BeagleBone with our computers. Since the procedure is well outlined on Piazza, I won't include much of the set-up here. Ultimately, the steps consisted of connecting the Beaglebone, installing drivers, and connecting it to wifi. We also make sure to update some files to enable X11 forwarding. Once the BeagleBone is set up, we can begin the actual lab portion.
+
+To start, we want to set up our lab environment by installing openssh on both the server and the client using the following commands:
+
+	sudo apt-get install openssh-server
+	sudo apt-get install openssh-client
+
+We can check that they have been successfully installed with the following command:
+
+	dpkg --get-selections | grep openssh
+
+		openssh-server					install
+		openssh-client					install
+		openssh-sftp-server				install
+
+Additionally, we will get our IP address for later use. By looking at the network interface "wlan0", next to "inet addr", we can find our IP address:
+
+	ifconfig
+
+		172.31.100.132
+
+With all of this complete, we can now move into setting up the server for our partner.
+
+First, we will generate our public and private keys, saving them to the default location:
+
+	ssh-keygen
+
+		Generating public/private rsa key pair.
+		Enter file in which to save the key (/root/.ssh/id_rsa): 
+		Created directory '/root/.ssh'.
+		Enter passphrase (empty for no passphrase): 
+		Enter same passphrase again: 
+		Your identification has been saved in /root/.ssh/id_rsa.
+		Your public key has been saved in /root/.ssh/id_rsa.pub.
+		The key fingerprint is:
+		5b:cf:f4:fc:b5:1e:81:08:0a:b1:ca:39:91:c9:1c:07 root@beaglebone
+		The key's randomart image is:
+		+---[RSA 2048]----+
+		|   E.o           |
+		|  o = o          |
+		|   * o   .       |
+		|  . + . . . . .  |
+		|   =   .S .... . |
+		|    .    o + o  .|
+		|        .   o o..|
+		|               .+|
+		|              .o.|
+		+-----------------+
+
+Then, we create an account and .ssh directory for the client on the server (I used my partner's first name and last initial as the username and password):
+
+	sudo useradd -d /home/samanh -m samanh
+	sudo passwd samanh
+	cd /home/samanh
+	sudo mkdir .ssh
+
+We finalize this by changing the ownership and permissions on the .ssh directory:
+
+	sudo chown -R samanh .ssh
+	sudo chmod 700 .ssh
+
+
+
+
+
+	// Disable password-based authentication, change PasswordAuthentication to "no"
+	$ emacs /etc/ssh/sshd_config
+	// Emacs not installed
+	$ sudo nano /etc/ssh/
+
+	ps aux | grep ssh
+
+
+
+
+We can then give the client the IP address we obtained earlier (164.67.207.117) for him to use to log into my server.
+
+
+			(for saman to do on his end)
+
+				sudo useradd -d /home/josephk -m josephk
+				sudo passwd josephk
+				cd /home/josephk
+				sudo mkdir .ssh
+				sudo chown -R josephk .ssh
+				sudo chmod 700 .ssh
+				ifconfig (this will give you the IP address  of the server. Give this to your partner).
+				ps aux | grep ssh
+
+
+Now, once our partner has set up his server for me, we can move on to acting as the client.
+
+We can first attempt to simply log into the server with the following commands:
+	ping server_ip_addr (just to check if the server responds)
+	ssh josephk@server_ip_addr
+
+In order to have password-less login, we want to copy our public key to the server for key-based authentication. To do this, we create our public and private keys again and copy the public key with the following commands:
+
+	ssh-keygen
+	ssh-copy-id -i josephk@server_ip_addr
+
+We then also add our private key to the authentication agent (ssh-agent)for passphrase-less login:
+
+	ssh-add
+
+We can test with the following command to check if we were successful (it should not ask for a passphrase). We use the -X since we also want to test for X session forwarding and running programs like xterm and firefox with GUI:
+	ssh -X josephk@server_ip_addr
+
+	xterm
+	firefox
+
+
+
+
+
+
+
+
+
+

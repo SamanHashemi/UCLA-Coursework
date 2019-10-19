@@ -1,0 +1,33 @@
+Lab 1 Answers.txt
+
+
+1. The shell command  man - k printf is the command to print all commands that have some specific word in their man descriptions.
+2. They are both found under /u/cs/ugrad/saman I used pwd name to find their directory on my machine
+3. The following commands are the one character commands and their functionality
+: - No effect; the command does nothing beyond expanding arguments
+              and  performing any specified redirections. A zero exit code is
+              returned
+. - execute a function
+w - shows which users are logged in  an what they are doing
+[ - 
+X - Nothing important but shows up w/ find command
+4. The file that is actually executed is /etc/alternatives/emacs. I found this using the readlink command
+5. The version number for emacs under bin and regualr is 24.3.1 and was found using the usr/bin/emacs -version and emacs -version commands respectively
+6. g+s gives the person accessing the file permission from the group. o-x removes the permissions for others for the files.
+7. I used the command find /usr/local/cs -type d -ctime -30.
+8. Because find is in the usr/bin/ directory (found using whereis find) I had to move to that directory and perform the ls -l | grep ^l | wc ls is used to list all the directories grep ^l makes a not l find and the wc prints the number of instances which was 271.
+9. using the man ls we find that -lt lists everything by time and we see that librom1394.so.0.3.0 is the oldest file in the specified directory 
+10.  man locale gives the information we need and we see that the data is being taken from the usr/share/i18n/locales
+11. We use the C-h a to search and find that the two commands with downcase in their names are
+ downcase-region
+downcase-word
+12.
+C-M-r isearch-backward-regexp <Do incremental search backward for regular expression.>
+C-M-s isearch-forward-regexp <Do incremental search forward for regular expression.>
+C-M-t transpose-sexps <Like \[transpose-words] but applies to sexps.>
+C-M-u backward-up-list  <go uplist backward>
+C-M-v scroll-other-window <scroll to the other window>
+C-M-w append-next-kill <kill next program>
+13. The C-g commands executes a quit during lisp code and signals a quit otherwise (found using a C-h b and a search for the C-g command until a C-h a to search for the C-g command action from the corresponding name
+14. yank is a like a C-v (paste) in windows and mac. It allows the user to paste the item they want to paste. This can be done using a copy M-w or a copy C-w and a paste (yank) C-y
+15. The only notable difference is that the dired command give the current and parent directory when listing.

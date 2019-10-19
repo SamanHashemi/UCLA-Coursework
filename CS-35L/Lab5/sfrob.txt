@@ -1,0 +1,27 @@
+SRFROB Lab 5
+
+When we run the time commands we can see that there is a clear difference in the times that it takes each specific program to run. Lets take a look at the result of the following below for a text file with 100 lines.
+
+time ./sfrobu < test.txt
+real	0m0.004s
+user	0m0.001s
+sys	0m0.003s
+
+
+time ./sfrobu -f < test.txt
+real	0m0.006s
+user	0m0.003s
+sys	0m0.002s
+
+time ./sfrobs < test.txt
+real	0m0.008s
+user	0m0.003s
+sys	0m0.007s
+
+time ./sfrobs -f < test.txt
+real	0m0.012s
+user	0m0.002s
+sys	0m0.009s
+
+
+Each of these times give us some deeper insight into each of the time comparisons. To go over the whole thing briefly (although it was not specified, this is for my own understanding) we see that we notice that the shell scripts seem to have slower times to run. This is (primarily) due to the fact that they are running in bash which is slower to run than their C counterparts. This is to be expected and it can be assumed that everything is running correctly

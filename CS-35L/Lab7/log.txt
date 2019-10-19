@@ -1,0 +1,74 @@
+Lab 7
+
+This lab was fairly straight forward and I completed it using the following procedure.
+
+First I had to connect my BB to the internet using the command "sudo connmanctl" this brought me to a shell where I had to input the following.
+
+connmanctl> enable wifi
+connmanctl> scan wifi
+connmanctl> services 
+connmanctl> agent on
+connmanctl> connect wifi_2cf7f1068f05_55434c415f5745425f524553_managed_none
+connmanctl> quit
+
+
+I to then download the following files using the commands:
+
+sudo apt-get install openssh-server
+sudo apt-get install openssh-client
+
+I then had to check to see what my ip address is which was found using the command "ifconfig":
+
+172.29.83.135
+
+I then had to create a keygen and I ran it using the command:
+
+ssh-keygen
+
+I saved it in the directory /root/.ssh/
+
+It printed the fingerprint and the randomart.
+
+I then made a server on my computer for my partner by doing the following commands:
+
+sudo useradd -d /home/janel -m janel
+sudo passwd janel
+cd /home/janel
+sudo mkdir .ssh
+sudo chown -R janel .ssh
+sudo chmod 700 .sssh
+
+I then had to make a server on my partners computer
+
+I did this by having them use the commands:
+sudo useradd -d /home/samanh -m samanh
+sudo passwd samanh
+cd /home/samanh
+sudo mkdir .ssh
+sudo chown -R samanh .ssh
+sudo chmod 700 .ssh
+
+I then had to change the passauth to no using the command:
+
+sudo nano /etc/ssh/sshd_config
+
+My partner then ran the command "ifconfig" to get me her address. Once this was all set up I was able to run the command
+
+ssh samanh@172.29.83.135
+
+After this was all over I then had to remove the password requirement which I did with the following:
+
+ssh-keygen
+ssh-copy-id -i samanh@172.29.83.135
+ssh-add
+
+This was the last step and we check to see that everything is working by running the command
+
+ssh -X samanh@172.29.83.135
+
+xterm
+
+which opens an xterm shell window. Lastly, I had Jane (my partner) check to see if this was working by running the command:
+ps aux
+
+where she saw that there was a section called xterm with me as the user. 

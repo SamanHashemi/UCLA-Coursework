@@ -1,0 +1,46 @@
+Name: Saman Alex Hashemipour
+ID: 904903562
+
+Lab 6
+
+In order to begin the lab we must follow the first instruction, which is to create file of ten million random floating point values. We do this by first by using the od and a use of -tf which indicated that we will be using floats. We then use the -N command followed by ten million * size of a float which is eight million. We have to follow it with the sed command "sed 's/^[0-7]* *//' to remove the values that we don't want to sort and then we use the tr command to put the values all on new lines. So the first command to create the file looks something like this:
+
+od -tf -N 80000000 < /dev/urandom | sed 's/^[0-7]* *//' | tr -s ' ' '\n' > random_nums.txt
+
+This takes a long time (for my machine on lnx06 it took about 2 minutes) but all the values are saved in random_nums.txt
+
+Once we have the file we can begin to checkout the sorting times. 
+
+For the first option:
+
+time -p sort -g random_nums.txt > /dev/null
+real 36.27
+user 206.51
+sys 0.57
+
+
+And the second (w/ parallel=1):
+time -p sort -g --parallel=1 random_nums.txt > /dev/null
+real 189.44
+user 189.18
+sys 0.25
+
+
+The third (w/ parallel=2):
+time -p sort -g --parallel=2 random_nums.txt > /dev/null
+ real 99.17
+user 189.70
+sys 0.37
+
+The fourth (w/ parallel=4):
+time -p sort -g --parallel=4 random_nums.txt > /dev/null
+real 56.54
+user 194.01
+sys 0.41
+
+The last one (w/ parallel=8):
+time -p sort -g --parallel=8 random_nums.txt > /dev/null
+real 36.46
+user 206.16
+sys 0.55
+

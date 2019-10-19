@@ -1,0 +1,28 @@
+“original” Output (with input): 
+
+How many people were surveyed? 5
+How many of them approve of the way the president is handling his job? 5
+How many of them disapprove of the way the president is handling his job? 6
+
+100.0% say they approve.
+120.0% say they disapprove.
+More people disapprove than approve.
+
+I put that 5 people were interviewed and that 5 people answered one way while 6 people answered a different way. This resulted in a output of 100% approval and 120% disapproval. This makes no sense because you cannot have 11 answers with a group of only 5 people. 
+
+
+“logic_Error” Output (with input):
+
+How many people were surveyed? 5
+How many of them approve of the way the president is handling his job? 2
+How many of them disapprove of the way the president is handling his job? 3
+
+40.0% say they approve.
+60.0% say they disapprove.
+More people approve than disapprove.
+
+In this file I reversed the > sign to a < sign on line 30 and this resulted in the backward statement “More people approve than disapprove.” This should have been “More people disapprove than approve.” While this error did not cause any compiler errors, it displays incorrect information to the user.
+
+“compile_error”:
+
+For the compiler error I made a change on line 7 by removing the “()” after “int main”. This resulted in a compiler error that read “Main cannot be declared as global variable”. I also remove a “;” from the end of a statement on line 13. This resulted in a “Expected ‘;’ after expression”.

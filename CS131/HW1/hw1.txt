@@ -1,0 +1,3 @@
+Homework 1 Assesment
+
+Getting startin with Ocaml was hard by just understanding the basics on how to use the functions and how to get familiar with using a recursion constantly. I had to really change my mindset on how to think recursively. The only part that I had a hard time with was the grammar, this wasn't even hard but I kept running into an error with the test cases. The only other way I thought about implementing it was using a shifting list but decided against it because logically it seemed more complicated.
